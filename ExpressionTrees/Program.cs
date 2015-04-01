@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,41 +25,40 @@ namespace ExpressionTrees
 
 				var selector = CreateSelector(propertyExpression, predicateExpression);
 				return
-					GetDbSet<TEntity>(context).Select(
+					context.Set<TEntity>().Select(
 						selector
 						).ToList().Select(e => e.Entity).ToArray();
 			}
 		}
 
-		private static DbSet<TEntity> GetDbSet<TEntity>(CarContext context) where TEntity : class
+		private static Expression<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>> CreateSelector
+			<TEntity, TChildEntity>(
+			Expression<Func<TEntity, IEnumerable<TChildEntity>>> propertyExpression,
+			Expression<Func<TChildEntity, bool>> predicateExpression)
 		{
-			return context.Set<TEntity>();
-		}
-
-		private static Expression<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>> CreateSelector<TEntity, TChildEntity>(
-			Expression<Func<TEntity, IEnumerable<TChildEntity>>> propertyExpression, Expression<Func<TChildEntity, bool>> predicateExpression)
-		{
-			var selectType = typeof(EntityWithFilteredChildren<TEntity, TChildEntity>);
+			var selectType = typeof (EntityWithFilteredChildren<TEntity, TChildEntity>);
 
 			//bind entity
-			var entityValueParam = Expression.Parameter(typeof(TEntity), "entityValue");
+			var entityValueParam = Expression.Parameter(typeof (TEntity), "entityValue");
 			var entityProp = selectType.GetProperty("Entity");
 			var entityValueAssignment = Expression.Bind(
 				entityProp, entityValueParam);
 			//bind collection
 			var childrenProp = selectType.GetProperty("Children");
 			var descriptionsMemberExpression = (propertyExpression.Body as MemberExpression);
-			var descriptionsPropertyInfo = (PropertyInfo)descriptionsMemberExpression.Member;
+			var descriptionsPropertyInfo = (PropertyInfo) descriptionsMemberExpression.Member;
 			var descriptionsProperty = Expression.Property(entityValueParam, descriptionsPropertyInfo);
 			//perform where call
-			var whereCall = Expression.Call(typeof(Enumerable), "Where",new []{ typeof(TChildEntity) }, descriptionsProperty, predicateExpression);
+			var whereCall = Expression.Call(typeof (Enumerable), "Where", new[] {typeof (TChildEntity)}, descriptionsProperty,
+				predicateExpression);
 
 			var descriptionValueAssignment = Expression.Bind(
 				childrenProp, whereCall);
 
 			var ctor = Expression.New(selectType);
 			var memberInit = Expression.MemberInit(ctor, entityValueAssignment, descriptionValueAssignment);
-			var selector = Expression.Lambda<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>>(memberInit, entityValueParam);
+			var selector = Expression.Lambda<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>>(memberInit,
+				entityValueParam);
 
 			return selector;
 		}
