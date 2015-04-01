@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionTrees", "ExpressionTrees\ExpressionTrees.csproj", "{25E8D48B-CB8A-46EE-9EA7-F76274DC7811}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{F69AE75E-BC98-4EAE-AF1A-F58E55742301}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{25E8D48B-CB8A-46EE-9EA7-F76274DC7811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25E8D48B-CB8A-46EE-9EA7-F76274DC7811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25E8D48B-CB8A-46EE-9EA7-F76274DC7811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F69AE75E-BC98-4EAE-AF1A-F58E55742301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69AE75E-BC98-4EAE-AF1A-F58E55742301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69AE75E-BC98-4EAE-AF1A-F58E55742301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69AE75E-BC98-4EAE-AF1A-F58E55742301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

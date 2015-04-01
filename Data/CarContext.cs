@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 
-namespace ExpressionTrees
+namespace Data
 {
 	public class CarContext : DbContext
 	{

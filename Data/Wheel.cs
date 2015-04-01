@@ -1,4 +1,4 @@
-namespace ExpressionTrees
+namespace Data
 {
 	public class Wheel
 	{

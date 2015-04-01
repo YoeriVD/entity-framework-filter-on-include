@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ExpressionTrees
+namespace Data
 {
-	internal static class EnumerableExtentions
+	public static class EnumerableExtentions
 	{
 		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 		{
