@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Data
+namespace ExpressionTrees
 {
-	public class TEntity
+	public class Car
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public virtual ICollection<TChildEntity> Wheels { get; set; } 
+		public virtual ICollection<Wheel> Wheels { get; set; } 
 	}
 }

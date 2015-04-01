@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Data;
 
 namespace ExpressionTrees
 {
@@ -11,12 +11,14 @@ namespace ExpressionTrees
 	{
 		private static void Main(string[] args)
 		{
-			FilterOnInclude(car => car.Wheels, wheel => wheel.SizeInInches == 14)
+			FilterOnInclude<Car, Wheel>(car => car.Wheels, wheel => wheel.SizeInInches == 14)
 				.ForEach(car => Console.WriteLine($"car : {car.Name} wheels: {car.Wheels.Count}"));
 		}
 
-		private static IEnumerable<TEntity> FilterOnInclude(
-			Expression<Func<TEntity, IEnumerable<TChildEntity>>> propertyExpression, Expression<Func<TChildEntity,bool>> predicateExpression)
+		private static IEnumerable<TEntity> FilterOnInclude<TEntity, TChildEntity>(
+			Expression<Func<TEntity, IEnumerable<TChildEntity>>> propertyExpression,
+			Expression<Func<TChildEntity, bool>> predicateExpression)
+			where TEntity : class
 		{
 			using (var context = new CarContext())
 			{
@@ -24,13 +26,18 @@ namespace ExpressionTrees
 
 				var selector = CreateSelector(propertyExpression, predicateExpression);
 				return
-					context.Cars.Select(
+					GetDbSet<TEntity>(context).Select(
 						selector
 						).ToList().Select(e => e.Entity).ToArray();
 			}
 		}
 
-		private static Expression<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>> CreateSelector(
+		private static DbSet<TEntity> GetDbSet<TEntity>(CarContext context) where TEntity : class
+		{
+			return context.Set<TEntity>();
+		}
+
+		private static Expression<Func<TEntity, EntityWithFilteredChildren<TEntity, TChildEntity>>> CreateSelector<TEntity, TChildEntity>(
 			Expression<Func<TEntity, IEnumerable<TChildEntity>>> propertyExpression, Expression<Func<TChildEntity, bool>> predicateExpression)
 		{
 			var selectType = typeof(EntityWithFilteredChildren<TEntity, TChildEntity>);
